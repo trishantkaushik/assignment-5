@@ -1,0 +1,4 @@
+The code you shared builds a simple \*\*Login/Signup system\*\* and a \*\*Money Manager web app\*\* using HTML, CSS, and JavaScript with `localStorage`. The login page allows users to sign up by storing their username and password locally, and then log in to access the money manager. Once logged in, the app displays a personalized dashboard showing \*\*income, expenses, and balance\*\*, with options to add transactions through a popup form. Each transaction includes details like amount, date, type (income/expense), category, and description, and is saved under the logged-in user’s account in `localStorage`. The app also provides functionality to delete transactions, automatically recalculating totals. A logout button clears the current session and redirects back to the login page, ensuring user-specific data management. Overall, it’s a lightweight, client-side personal finance tracker with basic authentication and transaction handling.
+
+
+
