@@ -1,155 +1,130 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Login</title>
+  <title>Money Manager</title>
+
   <style>
-    body {
-      font-family: Arial;
-      background: #f4f4f4;
-      text-align: center;
-      padding: 50px;
+    /* ================= GLOBAL ================= */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
 
-    .box {
+    body {
+      font-family: Arial;
+      background: linear-gradient(135deg, #6c63ff, #48c6ef);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    h1 {
+      text-align: center;
+      margin: 10px;
+      color: #333;
+    }
+
+    /* ================= FLOATING MONEY EMOJI ================= */
+    .money {
+      position: fixed;
+      font-size: 30px;
+      animation: float 6s linear infinite;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(100vh); opacity: 0; }
+      50% { opacity: 1; }
+      100% { transform: translateY(-10vh); opacity: 0; }
+    }
+
+    /* ================= CONTAINER ================= */
+    .container {
+      width: 95%;
+      max-width: 900px;
       background: white;
+      border-radius: 15px;
       padding: 20px;
-      width: 300px;
-      margin: auto;
-      border-radius: 10px;
-      box-shadow: 0 0 10px gray;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+
+    /* ================= LOGIN ================= */
+    #loginBox {
+      text-align: center;
     }
 
     input {
-      width: 90%;
+      width: 100%;
       padding: 10px;
       margin: 10px 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
     }
 
     button {
       padding: 10px;
       margin: 5px;
+      border: none;
+      border-radius: 8px;
       background: #6c63ff;
       color: white;
-      border: none;
       cursor: pointer;
-    }
-  </style>
-</head>
-
-<body>
-
-<div class="box">
-  <h2>Login / Signup</h2>
-
-  <input type="text" id="username" placeholder="Username">
-  <input type="password" id="password" placeholder="Password">
-
-  <button onclick="signup()">Sign Up</button>
-  <button onclick="login()">Login</button>
-</div>
-
-<script>
-// SIGNUP
-function signup() {
-  let user = document.getElementById("username").value;
-  let pass = document.getElementById("password").value;
-
-  if (!user || !pass) {
-    alert("Enter all details");
-    return;
-  }
-
-  let users = JSON.parse(localStorage.getItem("users")) || [];
-
-  if (users.find(u => u.username === user)) {
-    alert("User already exists!");
-    return;
-  }
-
-  users.push({ username: user, password: pass });
-  localStorage.setItem("users", JSON.stringify(users));
-
-  alert("Signup successful! Now login.");
-}
-
-// LOGIN
-function login() {
-  let user = document.getElementById("username").value;
-  let pass = document.getElementById("password").value;
-
-  let users = JSON.parse(localStorage.getItem("users")) || [];
-
-  let valid = users.find(u => u.username === user && u.password === pass);
-
-  if (!valid) {
-    alert("Invalid username or password");
-    return;
-  }
-
-  localStorage.setItem("currentUser", user);
-
-  // redirect
-  window.location.href = "money1.html";
-}
-</script>
-
-</body>
-</html>
- 
- * 2nd page *
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Money Manager</title>
-
-  <style>
-    body {
-      font-family: Arial;
-      background: #f4f4f4;
-      padding: 20px;
+      transition: 0.3s;
     }
 
-    h1 {
-      text-align: center;
+    button:hover {
+      background: #574fd6;
+    }
+
+    /* ================= APP ================= */
+    #app {
+      display: none;
     }
 
     .top-bar {
       display: flex;
       justify-content: space-between;
+      flex-wrap: wrap;
       margin-bottom: 10px;
     }
 
     .summary {
       display: flex;
-      justify-content: space-around;
-      background: white;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin: 15px 0;
+    }
+
+    .card {
+      flex: 1;
+      min-width: 120px;
+      background: #f4f6ff;
       padding: 15px;
       border-radius: 10px;
+      text-align: center;
     }
 
-    button {
-      padding: 8px 12px;
-      margin: 5px;
-      cursor: pointer;
-      background: #6c63ff;
-      color: white;
-      border: none;
-      border-radius: 5px;
-    }
-
+    /* ================= TABLE ================= */
     table {
       width: 100%;
-      background: white;
-      margin-top: 20px;
+      margin-top: 15px;
       border-collapse: collapse;
     }
 
     th, td {
-      border: 1px solid #ddd;
       padding: 10px;
+      border-bottom: 1px solid #ddd;
       text-align: center;
     }
 
+    th {
+      background: #6c63ff;
+      color: white;
+    }
+
+    /* ================= POPUP ================= */
     .popup {
       display: none;
       position: fixed;
@@ -162,139 +137,216 @@ function login() {
     .form-box {
       background: white;
       padding: 20px;
-      width: 300px;
-      margin: 100px auto;
+      width: 90%;
+      max-width: 300px;
+      margin: 80px auto;
       border-radius: 10px;
     }
 
-    input, select {
+    select {
       width: 100%;
       padding: 8px;
       margin: 8px 0;
     }
-  </style>
 
+    /* ================= RESPONSIVE ================= */
+    @media(max-width: 600px) {
+      h1 {
+        font-size: 20px;
+      }
+
+      .top-bar {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+      }
+
+      table {
+        font-size: 12px;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
+<!-- 💰 FLOATING EMOJIS -->
 <script>
-// LOGIN CHECK
-const user = localStorage.getItem("currentUser");
-if (!user) {
-  window.location.href = "login.html";
+for(let i=0;i<10;i++){
+  let m = document.createElement("div");
+  m.className = "money";
+  m.innerText = "💰";
+  m.style.left = Math.random()*100 + "vw";
+  m.style.animationDuration = (3 + Math.random()*5) + "s";
+  document.body.appendChild(m);
 }
 </script>
 
-<div class="top-bar">
-  <h2>Welcome, <span id="userName"></span></h2>
-  <button onclick="logout()">Logout</button>
+<div class="container">
+
+<!-- ================= LOGIN ================= -->
+<div id="loginBox">
+  <h2>Login / Signup</h2>
+
+  <input type="text" id="username" placeholder="Username">
+  <input type="password" id="password" placeholder="Password">
+
+  <button onclick="signup()">Sign Up</button>
+  <button onclick="login()">Login</button>
 </div>
 
-<h1>💰 Money Manager</h1>
+<!-- ================= APP ================= -->
+<div id="app">
 
-<div class="summary">
-  <h3>Income: ₹<span id="income">0</span></h3>
-  <h3>Expense: ₹<span id="expense">0</span></h3>
-  <h3>Balance: ₹<span id="balance">0</span></h3>
-</div>
-
-<button onclick="openForm()">+ Add Transaction</button>
-
-<!-- POPUP -->
-<div id="popup" class="popup">
-  <div class="form-box">
-    <h2>Add Transaction</h2>
-
-    <input type="number" id="amount" placeholder="Amount">
-    <input type="date" id="date">
-
-    <label><input type="radio" name="type" value="income"> Income</label>
-    <label><input type="radio" name="type" value="expense"> Expense</label>
-
-    <select id="category">
-      <option value="">Select Category</option>
-      <option>Salary</option>
-      <option>Food</option>
-      <option>Shopping</option>
-      <option>Rent</option>
-      <option>Others</option>
-    </select>
-
-    <input type="text" id="desc" placeholder="Description">
-
-    <button onclick="addTransaction()">Save</button>
-    <button onclick="closeForm()">Cancel</button>
+  <div class="top-bar">
+    <h2>Welcome, <span id="userName"></span></h2>
+    <button onclick="logout()">Logout</button>
   </div>
-</div>
 
-<table>
-<thead>
-<tr>
-  <th>Date</th>
-  <th>Type</th>
-  <th>Category</th>
-  <th>Description</th>
-  <th>Amount</th>
-  <th>Action</th>
-</tr>
-</thead>
-<tbody id="list"></tbody>
-</table>
+  <h1>💰 Money Manager</h1>
+
+  <div class="summary">
+    <div class="card">Income ₹<span id="income">0</span></div>
+    <div class="card">Expense ₹<span id="expense">0</span></div>
+    <div class="card">Balance ₹<span id="balance">0</span></div>
+  </div>
+
+  <button onclick="openForm()">+ Add Transaction</button>
+
+  <!-- POPUP -->
+  <div id="popup" class="popup">
+    <div class="form-box">
+      <h2>Add Transaction</h2>
+
+      <input type="number" id="amount" placeholder="Amount">
+      <input type="date" id="date">
+
+      <label><input type="radio" name="type" value="income"> Income</label>
+      <label><input type="radio" name="type" value="expense"> Expense</label>
+
+      <select id="category">
+        <option value="">Select Category</option>
+        <option>Salary</option>
+        <option>Food</option>
+        <option>Shopping</option>
+        <option>Rent</option>
+        <option>Others</option>
+      </select>
+
+      <input type="text" id="desc" placeholder="Description">
+
+      <button onclick="addTransaction()">Save</button>
+      <button onclick="closeForm()">Cancel</button>
+    </div>
+  </div>
+
+  <!-- TABLE -->
+  <table>
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Type</th>
+        <th>Category</th>
+        <th>Description</th>
+        <th>Amount</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody id="list"></tbody>
+  </table>
+
+</div>
+</div>
 
 <script>
-// SHOW USER
-document.getElementById("userName").innerText = user;
+// AUTH
+function signup() {
+  let user = username.value;
+  let pass = password.value;
 
-// LOGOUT
-function logout() {
-  localStorage.removeItem("currentUser");
-  window.location.href = "login.html";
+  if (!user || !pass) return alert("Enter all details");
+
+  let users = JSON.parse(localStorage.getItem("users")) || [];
+
+  if (users.find(u => u.username === user)) {
+    return alert("User exists!");
+  }
+
+  users.push({ username: user, password: pass });
+  localStorage.setItem("users", JSON.stringify(users));
+  alert("Signup successful!");
 }
 
-// DATA
-let transactions = JSON.parse(localStorage.getItem(user)) || [];
+function login() {
+  let user = username.value;
+  let pass = password.value;
+
+  let users = JSON.parse(localStorage.getItem("users")) || [];
+
+  let valid = users.find(u => u.username === user && u.password === pass);
+
+  if (!valid) return alert("Invalid login");
+
+  localStorage.setItem("currentUser", user);
+  initApp();
+}
+
+function logout() {
+  localStorage.removeItem("currentUser");
+  location.reload();
+}
+
+// APP
+let currentUser;
+let transactions = [];
+
+function initApp() {
+  currentUser = localStorage.getItem("currentUser");
+  if (!currentUser) return;
+
+  loginBox.style.display = "none";
+  app.style.display = "block";
+  userName.innerText = currentUser;
+
+  transactions = JSON.parse(localStorage.getItem(currentUser)) || [];
+  loadData();
+}
 
 function saveData() {
-  localStorage.setItem(user, JSON.stringify(transactions));
+  localStorage.setItem(currentUser, JSON.stringify(transactions));
 }
 
 function loadData() {
-  let list = document.getElementById("list");
   list.innerHTML = "";
-
   let income = 0, expense = 0;
 
   transactions.forEach(t => {
-    let row = `
+    list.innerHTML += `
       <tr>
         <td>${t.date}</td>
         <td>${t.type}</td>
         <td>${t.category}</td>
         <td>${t.desc}</td>
         <td>${t.amount}</td>
-        <td>
-          <button onclick="deleteTxn(${t.id})">Delete</button>
-        </td>
+        <td><button onclick="deleteTxn(${t.id})">Delete</button></td>
       </tr>
     `;
-    list.innerHTML += row;
 
-    if (t.type === "income") income += Number(t.amount);
-    else expense += Number(t.amount);
+    if (t.type === "income") income += +t.amount;
+    else expense += +t.amount;
   });
 
-  document.getElementById("income").innerText = income;
-  document.getElementById("expense").innerText = expense;
-  document.getElementById("balance").innerText = income - expense;
+  income.innerText = income;
+  expense.innerText = expense;
+  balance.innerText = income - expense;
 }
 
 function openForm() {
-  document.getElementById("popup").style.display = "block";
+  popup.style.display = "block";
 }
 
 function closeForm() {
-  document.getElementById("popup").style.display = "none";
+  popup.style.display = "none";
 }
 
 function addTransaction() {
@@ -304,52 +356,32 @@ function addTransaction() {
   let category = document.getElementById("category").value;
   let desc = document.getElementById("desc").value;
 
-  if (!amount || amount <= 0) {
-    alert("Enter valid amount");
-    return;
+  if (!amount || !date || !type || !category) {
+    return alert("Fill all fields");
   }
 
-  if (!date) {
-    alert("Select date");
-    return;
-  }
-
-  if (!type) {
-    alert("Select type");
-    return;
-  }
-
-  if (!category) {
-    alert("Select category");
-    return;
-  }
-
-  let txn = {
+  transactions.push({
     id: Date.now(),
     amount,
     date,
     type: type.value,
     category,
     desc
-  };
+  });
 
-  transactions.push(txn);
   saveData();
   loadData();
   closeForm();
 }
 
 function deleteTxn(id) {
-  if (confirm("Delete transaction?")) {
-    transactions = transactions.filter(t => t.id !== id);
-    saveData();
-    loadData();
-  }
+  transactions = transactions.filter(t => t.id !== id);
+  saveData();
+  loadData();
 }
 
-// INIT
-loadData();
+window.onload = initApp;
 </script>
 
 </body>
-</html> 
+</html>
